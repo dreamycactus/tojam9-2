@@ -1,8 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
 public class BearController : MonoBehaviour {
-
+//	public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
+	
+	[HideInInspector]
+	public CharState state {
+		get;
+		set;
+	}
 	private Animator animator;
 	private BarnMove barnMove;
 	// Use this for initialization
@@ -10,6 +16,7 @@ public class BearController : MonoBehaviour {
 	{
 		animator = this.GetComponent<Animator>();
 		barnMove = GetComponent<BarnMove> ();
+		state = CharState.Idle;
 	}
 
 	void HandleInput()
