@@ -4,6 +4,7 @@ using System.Collections;
 public class BearController : MonoBehaviour {
 	
 	private BarnAnimation animator;
+
 	private BarnMove barnMove;
 	// Use this for initialization
 	void Start()
@@ -11,29 +12,27 @@ public class BearController : MonoBehaviour {
 		animator = GetComponent<BarnAnimation>();
 		barnMove = GetComponent<BarnMove> ();
 	}
-	
+
 	void HandleInput()
 	{
-		var idx = Input.GetAxis ("Horizontal");
-		var idy = Input.GetAxis("Vertical");
-
-		barnMove.Move(AxisRound(idx) );
+		Input.GetJoystickNames ();
+		var idx = Input.GetAxis ("Hor1");
+		var idy = Input.GetAxis("Ver1");
 		
-		//		else
-		//		{
-		//			
-		//		}
+		barnMove.Move(AxisRound(idx));
+		if (idy < -0.5f) {
+			barnMove.Jump ();
+		}
 	}
-	
+
 	// Update is called once per frame
 	void Update()
 	{
 		HandleInput();
-
-		HandleAnimation();
 		
+		HandleAnimation();
 	}
-	
+
 	int AxisRound(float val) 
 	{
 		if (Mathf.Abs(val) < 0.3) {
