@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class BearController : MonoBehaviour {
-	
+
 	private Animator animator;
 	private BarnMove barnMove;
 	// Use this for initialization
@@ -11,31 +11,30 @@ public class BearController : MonoBehaviour {
 		animator = this.GetComponent<Animator>();
 		barnMove = GetComponent<BarnMove> ();
 	}
-	
+
 	void HandleInput()
 	{
-		var idx = Input.GetAxis ("Horizontal");
-		var idy = Input.GetAxis("Vertical");
-		
+		Input.GetJoystickNames ();
+		var idx = Input.GetAxis ("Hor1");
+		var idy = Input.GetAxis("Ver1");
+
 		if (transform.localScale.x > 0) {
 			FlipSprite();
 		}
 		
-		barnMove.Move(AxisRound(idx) );
-		
-		//		else
-		//		{
-		//			
-		//		}
+		barnMove.Move(AxisRound(idx));
+		if (idy < -0.5f) {
+			barnMove.Jump ();
+		}
 	}
-	
+
 	// Update is called once per frame
 	void Update()
 	{
 		HandleInput();
-		
+
 	}
-	
+
 	int AxisRound(float val) 
 	{
 		if (Mathf.Abs(val) < 0.3) {
