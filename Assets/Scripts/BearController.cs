@@ -3,12 +3,12 @@ using System.Collections;
 
 public class BearController : MonoBehaviour {
 
-	private Animator animator;
+	private BarnAnimation animator;
 	private BarnMove barnMove;
 	// Use this for initialization
 	void Start()
 	{
-		animator = this.GetComponent<Animator>();
+		animator = GetComponent<BarnAnimation>();
 		barnMove = GetComponent<BarnMove> ();
 	}
 
@@ -22,6 +22,8 @@ public class BearController : MonoBehaviour {
 		}
 		
 		barnMove.Move(AxisRound(idx) );
+
+		animator.Animate("Walk");
 			
 //		else
 //		{
@@ -38,13 +40,13 @@ public class BearController : MonoBehaviour {
 
 	int AxisRound(float val) 
 	{
-		Debug.Log (Mathf.Sign (val));
 		if (Mathf.Abs(val) < 0.3) {
 			return 0; 
 		}
 
-		return Mathf.Sign (val);
+		return (int)Mathf.Sign (val);
 	}
+
 	private void FlipSprite(){
 		transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
 	}

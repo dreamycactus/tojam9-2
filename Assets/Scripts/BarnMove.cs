@@ -13,7 +13,7 @@ public class BarnMove : MonoBehaviour {
 	}
 
 	public void Move(int dir) {
-		rbody.AddForce (new Vector2 ( (float)dir * 0.2f, 0.0f) );
+		rbody.AddForce (new Vector2 ( (float)dir * 5f, 0.0f) );
 	}
 	
 	// Update is called once per frame
