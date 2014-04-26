@@ -4,10 +4,10 @@ using System.Collections;
 public class BarnMove : MonoBehaviour {
 	private float maxspeed = 2.0f;
 	private float accel = 6.0f;
-	private float jumpaccel = 20.0f;
+	private float jumpaccel = 25.0f;
 	
 	private Timer jumpTimer = new Timer();
-	private float jumpCutoff = 0.2f;
+	private float jumpCutoff = 0.14f;
 	private bool onGround = true;
 	private int maxJumps = 2;
 	private int numJumps;
@@ -20,7 +20,6 @@ public class BarnMove : MonoBehaviour {
 		rbody = rigidbody2D;
 		rbody.fixedAngle = true;
 		controller = GetComponent<BearController> ();
-
 	}
 
 	public void Move(int dir) {
@@ -55,11 +54,14 @@ public class BarnMove : MonoBehaviour {
 			numJumps = 1;
 			jumpTimer.Start ();
 			controller.state = CharState.Jumping;
-			rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
 		} else if (controller.state == CharState.Jumping && numJumps++ < maxJumps) {
 			jumpTimer.Start ();
 			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
-				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+				if ( rbody.velocity.y < 0 ) {
+					rbody.velocity = new Vector2(rbody.velocity.x, 0.0f);
+				}
+				rbody.AddForce (new Vector2 (0.0f, 2.0f*jumpaccel) );
 			}
 		}
 	}
