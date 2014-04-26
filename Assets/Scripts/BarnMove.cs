@@ -16,6 +16,9 @@ public class BarnMove : MonoBehaviour {
 	
 	private Timer jumpTimer = new Timer();
 	private float jumpCutoff = 0.2f;
+	private bool onGround = true;
+	private int maxJumps = 2;
+	private int numJumps;
 
 	Rigidbody2D rbody;
 	// Use this for initialization
@@ -28,6 +31,7 @@ public class BarnMove : MonoBehaviour {
 	public void Move(int dir) {
 		switch (state) {
 		case CharState.Idle:
+			state = CharState.Moving;
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed) {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 			}
@@ -51,23 +55,50 @@ public class BarnMove : MonoBehaviour {
 		}
 	}
 
-	public void Jump() {
-		Debug.Log (state);
-//		rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+	public void JumpStart() {
 		if (state == CharState.Idle || state == CharState.Moving) {
-				jumpTimer.Start ();
-				state = CharState.Jumping;
-				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
-		} else if (state == CharState.Jumping ) {
+			numJumps = 1;
+			jumpTimer.Start ();
+			state = CharState.Jumping;
+			rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+		} else if (state == CharState.Jumping && numJumps++ < maxJumps) {
+			jumpTimer.Start ();
 			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
 				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
 			}
-			jumpTimer.Stop();
+		}
+	}
+
+	public void Jump() {
+		if (state == CharState.Jumping ) {
+			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
+				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+			}
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		 
+	}
+
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		var normal = col.contacts[0].normal;
+		// get its elevation angle in degrees:
+		var angle = Mathf.Rad2Deg * Mathf.Asin(normal.y);
+		Debug.Log (angle);
+		// if normal points below -limAngle, collision is from above:
+		if (angle < 0){
+		} 
+		else // if angle > limAngle, collision is from below:
+		if (angle > 0){
+			onGround = true;
+			Debug.Log ("onGround");
+			state = CharState.Idle;
+		}
+		else { // otherwise collision is lateral:
+		}
+
 	}
 }
