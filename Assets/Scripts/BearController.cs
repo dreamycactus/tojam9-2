@@ -1,13 +1,23 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
 public class BearController : MonoBehaviour {
 
+//	public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
+	
+	[HideInInspector]
+	public CharState state {
+		get;
+		set;
+	}
 	private BarnMove barnMove;
+	private BarnAttack barnAttack;
 	// Use this for initialization
 	void Start()
 	{
 		barnMove = GetComponent<BarnMove> ();
+		state = CharState.Idle;
+		barnAttack = GetComponentInChildren<BarnAttack> ();
 	}
 
 	void HandleInput()
@@ -24,6 +34,12 @@ public class BearController : MonoBehaviour {
 				barnMove.JumpStart();
 		} else if (ijmpstate) {
 				barnMove.Jump();
+		}
+
+		var iattackdown = Input.GetButtonDown ("joy1x");
+		if (iattackdown) {
+			Debug.Log ("hi");
+			barnAttack.Attack();
 		}
 	}
 

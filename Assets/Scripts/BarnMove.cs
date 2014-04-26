@@ -2,23 +2,17 @@
 using System.Collections;
 
 public class BarnMove : MonoBehaviour {
-	public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
-
-	[HideInInspector]
-	public CharState state {
-		get;
-		set;
-	}
-
 	private float maxspeed = 2.0f;
 	private float accel = 6.0f;
-	private float jumpaccel = 20.0f;
+	private float jumpaccel = 25.0f;
 	
 	private Timer jumpTimer = new Timer();
-	private float jumpCutoff = 0.2f;
+	private float jumpCutoff = 0.14f;
 	private bool onGround = true;
 	private int maxJumps = 2;
 	private int numJumps;
+
+	private BearController controller;
 
 	Rigidbody2D rbody;
 
@@ -28,26 +22,24 @@ public class BarnMove : MonoBehaviour {
 	void Start () {
 		rbody = rigidbody2D;
 		rbody.fixedAngle = true;
-		state = CharState.Idle;
 
 		animator = GetComponent<BarnAnimation>();
+
+		controller = GetComponent<BearController>();
 	}
 
 	public void Move(int dir) {
-
-
-
-		switch (state) {
+		switch (controller.state) {
 		case CharState.Idle:
-			//state = CharState.Moving;
+			//controller.state = CharState.Moving;
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed) {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 
 					if (dir < 0){
-						state = CharState.Moving;
+						controller.state = CharState.Moving;
 						FaceRight();
 					}else if (dir > 0){
-						state = CharState.Moving;
+						controller.state = CharState.Moving;
 						FaceLeft();
 					}
 			}
@@ -59,7 +51,7 @@ public class BarnMove : MonoBehaviour {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 
 					if (dir == 0){
-						state = CharState.Idle;
+						controller.state = CharState.Idle;
 					}
 			}
 			break;
@@ -76,28 +68,31 @@ public class BarnMove : MonoBehaviour {
 	}
 
 	public void JumpStart() {
-		if (state == CharState.Idle || state == CharState.Moving) {
+		if (controller.state == CharState.Idle || controller.state == CharState.Moving) {
 			numJumps = 1;
 			jumpTimer.Start ();
-			state = CharState.Jumping;
-			rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
-		} else if (state == CharState.Jumping && numJumps++ < maxJumps) {
+			controller.state = CharState.Jumping;
+			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
+		} else if (controller.state == CharState.Jumping && numJumps++ < maxJumps) {
 			jumpTimer.Start ();
 			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
-				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+				if ( rbody.velocity.y < 0 ) {
+					rbody.velocity = new Vector2(rbody.velocity.x, 0.0f);
+				}
+				rbody.AddForce (new Vector2 (0.0f, 2.0f*jumpaccel) );
 			}
 		}
 	}
 
 	public void Jump() {
-		if (state == CharState.Jumping ) {
+		if (controller.state == CharState.Jumping ) {
 			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
 				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
 			}
 		}
 
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
 		HandleAnimation();
@@ -105,7 +100,7 @@ public class BarnMove : MonoBehaviour {
 
 	private void HandleAnimation(){
 
-		switch (state) {
+		switch (controller.state) {
 		case CharState.Idle:
 			animator.Animate("Idle");
 			break;
@@ -145,7 +140,7 @@ public class BarnMove : MonoBehaviour {
 		if (angle > 0){
 			onGround = true;
 			Debug.Log ("onGround");
-			state = CharState.Idle;
+			controller.state = CharState.Idle;
 		}
 		else { // otherwise collision is lateral:
 		}
