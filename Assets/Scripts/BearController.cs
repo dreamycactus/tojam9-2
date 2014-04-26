@@ -52,7 +52,6 @@ public class BearController : MonoBehaviour {
 	void Update()
 	{
 		HandleInput();
-
 	}
 
 	int AxisRound(float val) 

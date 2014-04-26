@@ -31,6 +31,12 @@ public class BarnAttack : MonoBehaviour
 		attackbox.enabled = true;
 	}
 
+	void Update() {
+		Debug.DrawLine(new Vector3(attackbox.center.x, attackbox.center.y, 0.0f), 
+		               new Vector3(attackbox.center.x + attackbox.size.x, attackbox.center.y + attackbox.size.y, 0.0f));
+		
+	}
+
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		Debug.Log (other);
