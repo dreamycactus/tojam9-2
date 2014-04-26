@@ -15,19 +15,33 @@ public class BarnMove : MonoBehaviour {
 	private BearController controller;
 
 	Rigidbody2D rbody;
+
+	private BarnAnimation animator;
+
 	// Use this for initialization
 	void Start () {
 		rbody = rigidbody2D;
 		rbody.fixedAngle = true;
-		controller = GetComponent<BearController> ();
+
+		animator = GetComponent<BarnAnimation>();
+
+		controller = GetComponent<BearController>();
 	}
 
 	public void Move(int dir) {
 		switch (controller.state) {
 		case CharState.Idle:
-			controller.state = CharState.Moving;
+			//controller.state = CharState.Moving;
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed) {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
+
+					if (dir < 0){
+						controller.state = CharState.Moving;
+						FaceRight();
+					}else if (dir > 0){
+						controller.state = CharState.Moving;
+						FaceLeft();
+					}
 			}
 			break;
 		case CharState.Moving:
@@ -35,6 +49,10 @@ public class BarnMove : MonoBehaviour {
 					Mathf.Sign (dir) != Mathf.Sign (rbody.velocity.x)) {
 
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
+
+					if (dir == 0){
+						controller.state = CharState.Idle;
+					}
 			}
 			break;
 		case CharState.Jumping:
@@ -72,11 +90,41 @@ public class BarnMove : MonoBehaviour {
 				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
 			}
 		}
+
 	}
 
 	// Update is called once per frame
 	void Update () {
-		 
+		HandleAnimation();
+	}
+
+	private void HandleAnimation(){
+
+		switch (controller.state) {
+		case CharState.Idle:
+			animator.Animate("Idle");
+			break;
+		case CharState.Moving:
+			animator.Animate("Walk");
+			break;
+		case CharState.Jumping:
+			animator.Animate("Jump");
+			break;
+		default:
+			break;
+		}
+	}
+
+	private void FaceLeft(){
+		if (transform.localScale.x < 0) {
+			transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
+		}
+	}
+	
+	private void FaceRight(){
+		if (transform.localScale.x > 0) {
+			transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
+		}
 	}
 
 	void OnCollisionEnter2D(Collision2D col)
