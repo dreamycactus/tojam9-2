@@ -10,13 +10,9 @@ public class Timer
 
 	public void Start() 
 	{
-		
 		this.startTime = DateTime.Now;
-		
 		this.running = true;
-		
 	}
-
 	
 	public void Stop() 	
 	{

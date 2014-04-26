@@ -16,6 +16,9 @@ public class BarnMove : MonoBehaviour {
 	
 	private Timer jumpTimer = new Timer();
 	private float jumpCutoff = 0.2f;
+	private bool onGround = true;
+	private int maxJumps = 2;
+	private int numJumps;
 
 	Rigidbody2D rbody;
 
@@ -36,6 +39,7 @@ public class BarnMove : MonoBehaviour {
 
 		switch (state) {
 		case CharState.Idle:
+			state = CharState.Moving;
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed) {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 
@@ -71,18 +75,25 @@ public class BarnMove : MonoBehaviour {
 		}
 	}
 
-	public void Jump() {
-		Debug.Log (state);
-//		rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+	public void JumpStart() {
 		if (state == CharState.Idle || state == CharState.Moving) {
-				jumpTimer.Start ();
-				state = CharState.Jumping;
-				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
-		} else if (state == CharState.Jumping ) {
+			numJumps = 1;
+			jumpTimer.Start ();
+			state = CharState.Jumping;
+			rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+		} else if (state == CharState.Jumping && numJumps++ < maxJumps) {
+			jumpTimer.Start ();
 			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
 				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
 			}
-			jumpTimer.Stop();
+		}
+	}
+
+	public void Jump() {
+		if (state == CharState.Jumping ) {
+			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
+				rbody.AddForce (new Vector2 (0.0f, jumpaccel) );
+			}
 		}
 
 	}
@@ -119,5 +130,25 @@ public class BarnMove : MonoBehaviour {
 		if (transform.localScale.x > 0) {
 			transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
 		}
+	}
+
+	void OnCollisionEnter2D(Collision2D col)
+	{
+		var normal = col.contacts[0].normal;
+		// get its elevation angle in degrees:
+		var angle = Mathf.Rad2Deg * Mathf.Asin(normal.y);
+		Debug.Log (angle);
+		// if normal points below -limAngle, collision is from above:
+		if (angle < 0){
+		} 
+		else // if angle > limAngle, collision is from below:
+		if (angle > 0){
+			onGround = true;
+			Debug.Log ("onGround");
+			state = CharState.Idle;
+		}
+		else { // otherwise collision is lateral:
+		}
+
 	}
 }

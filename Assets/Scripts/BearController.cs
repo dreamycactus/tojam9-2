@@ -17,8 +17,13 @@ public class BearController : MonoBehaviour {
 		var idy = Input.GetAxis("Ver1");
 		
 		barnMove.Move(AxisRound(idx));
-		if (idy < -0.5f) {
-			barnMove.Jump ();
+		var ijmpdown = Input.GetButtonDown ("Jump1");
+		var ijmpstate = Input.GetButton ("Jump1");
+
+		if (ijmpdown) {
+				barnMove.JumpStart();
+		} else if (ijmpstate) {
+				barnMove.Jump();
 		}
 	}
 
