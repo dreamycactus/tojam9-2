@@ -36,4 +36,12 @@ public class BarnAnimation : MonoBehaviour {
 		return (int)characterState;
 	}
 
+	public void SetIsRunning(bool toggle){
+		animator.SetBool("Running", toggle);
+	}
+
+	public void DoubleJump(){
+		animator.SetTrigger("DoubleJump");
+	}
+
 }
