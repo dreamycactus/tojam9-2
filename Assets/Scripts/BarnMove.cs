@@ -39,7 +39,7 @@ public class BarnMove : MonoBehaviour {
 
 		switch (state) {
 		case CharState.Idle:
-			state = CharState.Moving;
+			//state = CharState.Moving;
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed) {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 
