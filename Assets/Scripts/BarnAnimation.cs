@@ -6,7 +6,8 @@ public class BarnAnimation : MonoBehaviour {
 	//character state used for tracking animations
 	enum CharacterState {
 		Idle = 0,
-		Walk = 1
+		Walk = 1,
+		Jump = 2
 	}
 
 	private CharacterState characterState = CharacterState.Idle;

@@ -2,14 +2,11 @@
 using System.Collections;
 
 public class BearController : MonoBehaviour {
-	
-	private BarnAnimation animator;
 
 	private BarnMove barnMove;
 	// Use this for initialization
 	void Start()
 	{
-		animator = GetComponent<BarnAnimation>();
 		barnMove = GetComponent<BarnMove> ();
 	}
 
@@ -29,8 +26,6 @@ public class BearController : MonoBehaviour {
 	void Update()
 	{
 		HandleInput();
-		
-		HandleAnimation();
 	}
 
 	int AxisRound(float val) 
@@ -41,32 +36,4 @@ public class BearController : MonoBehaviour {
 		return (int)Mathf.Sign(val);
 	}
 
-	private void FaceLeft(){
-		if (transform.localScale.x < 0) {
-			transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
-		}
-	}
-
-	private void FaceRight(){
-		if (transform.localScale.x > 0) {
-			transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
-		}
-	}
-
-	private void HandleAnimation(){
-		var idx = Input.GetAxis ("Horizontal");
-		var idy = Input.GetAxis("Vertical");
-		
-		if (idx > 0.1){
-			FaceLeft();
-			animator.Animate("Walk");
-		}
-		else if (idx < -0.1){
-			FaceRight();
-			animator.Animate("Walk");
-		}
-		else {
-			animator.Animate("Idle");
-		}
-	}
 }
