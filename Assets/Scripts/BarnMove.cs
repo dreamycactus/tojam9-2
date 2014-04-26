@@ -25,7 +25,6 @@ public class BarnMove : MonoBehaviour {
 		rbody.fixedAngle = true;
 
 		animator = GetComponent<BarnAnimation>();
-
 		controller = GetComponent<BearController>();
 	}
 
@@ -155,7 +154,7 @@ public class BarnMove : MonoBehaviour {
 		var normal = col.contacts[0].normal;
 		// get its elevation angle in degrees:
 		var angle = Mathf.Rad2Deg * Mathf.Asin(normal.y);
-		//Debug.Log (angle);
+
 		// if normal points below -limAngle, collision is from above:
 		if (angle < 0){
 		} 
