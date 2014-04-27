@@ -11,8 +11,8 @@ public class BarnAttack : MonoBehaviour
 	public BoxCollider2D attackbox;
 	public Vector2 spawnoffset;
 
-	public float[] attackInterval = new float[]{0.02f, 0.4f};
-	public float attackTotal = 0.7f;
+	public float[] attackInterval;
+	public float attackTotal = 2.0f;
 	private Timer attackTimer = new Timer();
 	
 	Rigidbody2D rbody;
@@ -22,7 +22,7 @@ public class BarnAttack : MonoBehaviour
 		rbody = parent.rigidbody2D;
 		rbody.fixedAngle = true;
 		controller = parent.GetComponent<BearController> ();
-		attackInterval = new float[]{0.05f, 0.3f};
+//		attackInterval = new float[]{0.5f, 1.5f};
 		attackbox.enabled = false;
 		gameObject.tag = "Attack";
 	}
@@ -52,13 +52,18 @@ public class BarnAttack : MonoBehaviour
 			} else if (time < attackTotal) {
 				state = AttackState.End;
 			} else {
-				controller.isAttacking = false;
-				attackbox.enabled = false;
+				EndAttack();
 			}
 		} else {
-			controller.isAttacking = false;
-			attackbox.enabled = false;
+			EndAttack();
 		}
+	}
+
+	public void EndAttack()
+	{
+		controller.isAttacking = false;
+		attackbox.enabled = false;
+		attackTimer.Stop ();
 	}
 
 //	void OnGUI() {
@@ -75,6 +80,7 @@ public class BarnAttack : MonoBehaviour
 		Debug.Log ("hit" + other);
 		if (other.gameObject.tag == "Player" && other.gameObject != transform.parent) {
 			other.gameObject.GetComponent<BearController>().isAlive = false;
+			Debug.Log("Kill");
 		}
 	}
 }

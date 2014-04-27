@@ -28,11 +28,16 @@ public class BearController : MonoBehaviour {
 		barnMove = GetComponent<BarnMove> ();
 		state = CharState.Idle;
 		barnAttack = GetComponentInChildren<BarnAttack> ();
-		gameObject.tag = "player";
+		gameObject.tag = "Player";
 	}
 
 	void HandleInput()
 	{
+		if ( Input.GetButtonDown(inputmap[(int)InputMap.ButY]) && isAttacking &&
+		    barnAttack.state == AttackState.End) {
+			barnAttack.EndAttack();
+			Debug.Log ("Cancel" + barnAttack.state);
+		}
 		if (!isAttacking) {
 			Input.GetJoystickNames ();
 			var idx = Input.GetAxis (inputmap[(int)InputMap.Axis1X]);
@@ -47,15 +52,15 @@ public class BearController : MonoBehaviour {
 //				barnMove.jumpEnd = true;
 //			}
 			if (ijmpdown) {
-					barnMove.JumpStart ();
+				barnMove.JumpStart ();
 			} else if (ijmpstate) {
-					barnMove.Jump ();
+				barnMove.Jump ();
 			}
 
 			var iattackdown = Input.GetButtonDown (inputmap[(int)InputMap.ButX]);
-			if (iattackdown) {
-					Debug.Log ("hi");
-					barnAttack.Attack ();
+			if (iattackdown && !isAttacking) {
+				Debug.Log ("hi");
+				barnAttack.Attack ();
 			}
 		}
 	}
