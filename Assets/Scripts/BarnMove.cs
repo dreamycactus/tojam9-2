@@ -18,7 +18,7 @@ public class BarnMove : MonoBehaviour {
 	private int maxJumps = 2;
 	private int numJumps;
 	private Timer grabTimer = new Timer();
-	private float wallpushamt = 100.0f;
+	private float wallpushamt = 50.0f;
 
 	private BearController controller;
 	private WallGrabCollider wallGrabCollider;
@@ -131,10 +131,8 @@ public class BarnMove : MonoBehaviour {
 			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
 		} else if (controller.state == CharState.WallGrab || controller.state == CharState.WallSlide){
 			if (transform.localScale.x < 0){
-				Debug.Log("push left");
 				rbody.AddForce (new Vector2 (wallpushamt, 2.0f*jumpaccel) );
 			}else {
-				Debug.Log ("push right");
 				rbody.AddForce (new Vector2 (-wallpushamt, 2.0f*jumpaccel) );
 			}
 
