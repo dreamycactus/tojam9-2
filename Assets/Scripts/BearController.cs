@@ -59,7 +59,6 @@ public class BearController : MonoBehaviour {
 
 			var iattackdown = Input.GetButtonDown (inputmap[(int)InputMap.ButX]);
 			if (iattackdown && !isAttacking) {
-				Debug.Log ("hi");
 				barnAttack.Attack ();
 			}
 		}
