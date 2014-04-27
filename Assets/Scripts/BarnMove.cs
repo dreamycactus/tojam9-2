@@ -173,7 +173,7 @@ public class BarnMove : MonoBehaviour {
 	}
 
 	public void Lunge(Vector2 vec) {
-		if ( transform.localScale.x < 0 ) {
+		if ( transform.localScale.x > 0 ) {
 			vec.x *= -1.0f;
 		}
 		rbody.AddForce (vec);
