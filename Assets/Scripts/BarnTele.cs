@@ -5,7 +5,7 @@ public enum TeleState { Tele, None }
 public class BarnTele : MonoBehaviour 
 {
 	Rigidbody2D rbody;
-	public float teleTime = 0.15f;
+	public float teleTime = 0.005f;
 	public float teleamt = 20.0f;
 	Timer timer = new Timer();
 	Vector2 inputvec;
