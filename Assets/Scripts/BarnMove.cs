@@ -2,7 +2,7 @@
 using System.Collections;
 
 public class BarnMove : MonoBehaviour {
-	private float maxspeed = 2.0f;
+	private float maxspeed = 3.0f;
 	private float accel = 6.0f;
 	private float jumpaccel = 25.0f;
 	
