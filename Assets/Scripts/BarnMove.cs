@@ -4,13 +4,13 @@ using System.Collections;
 public class BarnMove : MonoBehaviour {
 	private float maxspeed = 3.0f;
 	private float accel = 6.0f;
-	private float jumpaccel = 25.0f;
+	private float jumpaccel = 30.0f;
 	
 	private Timer jumpTimer = new Timer();
 	[HideInInspector]
 	public bool jumpEnd;
-	private float jumpCutoff = 0.14f;
-	private float grabCutoff = 2.8f;
+	private float jumpCutoff = 0.1f;
+	private float grabCutoff = 0.7f;
 	public float wallslidedrag = 5;
 	private bool onGround = true;
 	private bool onWall = false;
@@ -18,7 +18,7 @@ public class BarnMove : MonoBehaviour {
 	private int maxJumps = 2;
 	private int numJumps;
 	private Timer grabTimer = new Timer();
-	private float wallpushamt = 50.0f;
+	private float wallpushamt = 80.0f;
 
 	private BearController controller;
 	private WallGrabCollider wallGrabCollider;
@@ -138,7 +138,7 @@ public class BarnMove : MonoBehaviour {
 			controller.state = CharState.Jumping;
 			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
 		} else if (controller.state == CharState.WallGrab || controller.state == CharState.WallSlide){
-			if (transform.localScale.x > 0){
+			if (transform.localScale.x < 0){
 				rbody.AddForce (new Vector2 (wallpushamt, 2.0f*jumpaccel) );
 			}else {
 				rbody.AddForce (new Vector2 (-wallpushamt, 2.0f*jumpaccel) );
@@ -229,9 +229,9 @@ public class BarnMove : MonoBehaviour {
 		var normal = col.contacts[0].normal;
 		// get its elevation angle in degrees:
 		var angle = Mathf.Rad2Deg * Mathf.Asin(normal.y);
-
+		Debug.Log (angle);
 		// if normal points below -limAngle, collision is from above:
-		if (angle < 0) {
+		if (false) {
 				} else // if angle > limAngle, collision is from below:
 		if (angle > 3 && angle < 177) {
 						onGround = true;
@@ -239,15 +239,16 @@ public class BarnMove : MonoBehaviour {
 						//Debug.Log ("onGroundl");
 						controller.state = CharState.Moving;
 				} else // if angle > limAngle, collision is from below:
-		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player") {
+		if (((angle > 175 && angle < 185) || (angle > -5 && angle < 5)) && col.transform.tag != "Player") {
 				onWall = true;
+			Debug.Log ("grab wall");
 				grabbedWall = col.gameObject;
 				audio.PlayOneShot(sfxgrab);
-				if (transform.localScale.x > 0) {
-						FaceRight ();
-				} else {
-						FaceLeft ();
-				}
+//				if (transform.localScale.x > 0) {
+//					FaceRight ();
+//				} else {
+//					FaceLeft ();
+//				}
 		}
 		else { // otherwise collision is lateral:
 		}

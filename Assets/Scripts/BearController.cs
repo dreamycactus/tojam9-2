@@ -72,8 +72,13 @@ public class BearController : MonoBehaviour {
 
 			var ibdown = Input.GetButtonDown(inputmap[(int)InputMap.ButB]);
 			if (ibdown) {
+<<<<<<< HEAD
 
 				animator.Animate("Tele");
+=======
+				animator.Animate("Tele");
+
+>>>>>>> 841ceea90e2d0994f360a62880a679de44f28d55
 				GetComponent<BarnTele>().Teleport(new Vector2(idx, -idy));
 			}
 

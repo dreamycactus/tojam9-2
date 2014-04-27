@@ -12,6 +12,7 @@ public class Camera2 : MonoBehaviour
 			players = new ArrayList();
 			var ps = GameObject.FindGameObjectsWithTag ("Player");
 			players.AddRange (ps);
+		Application.targetFrameRate = 60;
 		}
 	
 		// Update is called once per frame
