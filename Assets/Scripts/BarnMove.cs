@@ -10,7 +10,7 @@ public class BarnMove : MonoBehaviour {
 	[HideInInspector]
 	public bool jumpEnd;
 	private float jumpCutoff = 0.14f;
-	private float grabCutoff = 0.8f;
+	private float grabCutoff = 2.8f;
 	public float wallslidedrag = 5;
 	private bool onGround = true;
 	private bool onWall = false;
@@ -22,6 +22,9 @@ public class BarnMove : MonoBehaviour {
 
 	private BearController controller;
 	private WallGrabCollider wallGrabCollider;
+	[HideInInspector]
+	public GameObject grabbedWall;
+
 
 	Rigidbody2D rbody;
 
@@ -113,7 +116,6 @@ public class BarnMove : MonoBehaviour {
 				rbody.drag = 0;
 				controller.state = CharState.Idle;
 			}
-
 			break;
 		default:
 			break;
@@ -233,6 +235,7 @@ public class BarnMove : MonoBehaviour {
 				} else // if angle > limAngle, collision is from below:
 		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player") {
 				onWall = true;
+				grabbedWall = col.gameObject;
 				if (transform.localScale.x < 0) {
 						//FaceRight ();
 				} else {
@@ -244,12 +247,22 @@ public class BarnMove : MonoBehaviour {
 
 	}
 
+	public void LetGoWall() {
+		if (onWall) {
+			onWall = false;
+			wallGrabCollider.onWall = false;
+			controller.state = CharState.Idle;
+			rbody.drag = 0;
+		}
+	}
+
 	void OnCollisionExit2D(Collision2D col)
 	{
-		
 		if (onWall && col.transform.tag != "Player"){
 			onWall = false;
 		}
-		
+		if (col.gameObject == grabbedWall) {
+			grabbedWall = null;
+		}
 	}
 }
