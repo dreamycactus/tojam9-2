@@ -8,7 +8,8 @@ public class BarnAnimation : MonoBehaviour {
 		Idle = 0,
 		Walk = 1,
 		Jump = 2,
-		Attack = 3
+		Attack = 3,
+		WallGrab = 4
 	}
 
 	private CharacterState characterState = CharacterState.Idle;

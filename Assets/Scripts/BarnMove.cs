@@ -19,6 +19,7 @@ public class BarnMove : MonoBehaviour {
 	private Timer grabTimer = new Timer();
 
 	private BearController controller;
+	private WallGrabCollider wallGrabCollider;
 
 	Rigidbody2D rbody;
 
@@ -31,6 +32,7 @@ public class BarnMove : MonoBehaviour {
 
 		animator = GetComponent<BarnAnimation>();
 		controller = GetComponent<BearController>();
+		wallGrabCollider = GetComponentInChildren<WallGrabCollider> ();
 	}
 
 	public void Move(int dir) {
@@ -85,7 +87,7 @@ public class BarnMove : MonoBehaviour {
 				FaceLeft();
 			}
 			
-			if (onWall){
+			if (wallGrabCollider.onWall && onWall){
 				AttachToWall();
 			}
 			break;
@@ -105,7 +107,7 @@ public class BarnMove : MonoBehaviour {
 		case CharState.WallSlide:
 			//rbody.
 			//rbody.velocity = new Vector2(0,0.2f);
-			if (!onWall){
+			if (!wallGrabCollider.onWall){
 				rbody.drag = 0;
 				controller.state = CharState.Idle;
 			}
@@ -135,6 +137,7 @@ public class BarnMove : MonoBehaviour {
 			controller.state = CharState.Jumping;
 			rbody.drag = 0;
 
+			wallGrabCollider.onWall = false;
 			onWall = false;
 		}
 		else if (controller.state == CharState.Jumping && numJumps++ < maxJumps) {
@@ -181,6 +184,9 @@ public class BarnMove : MonoBehaviour {
 			break;
 		case CharState.Jumping:
 			animator.Animate("Jump");
+			break;
+		case CharState.WallGrab:
+			animator.Animate("WallGrab");
 			break;
 		default:
 			break;
