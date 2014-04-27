@@ -14,6 +14,8 @@ public class BarnAttack : MonoBehaviour
 	public float[] attackInterval;
 	public float attackTotal = 2.0f;
 	private Timer attackTimer = new Timer();
+
+	public Vector2 attackForce = new Vector2 (200.0f, 30.0f);
 	
 	Rigidbody2D rbody;
 	// Use this for initialization
@@ -39,6 +41,9 @@ public class BarnAttack : MonoBehaviour
 
 	void StartAttack() {
 		controller.isAttacking = true;
+		var parent = transform.parent.gameObject;
+		parent.GetComponent<BarnMove> ().Lunge (new Vector2 (50.0f, 0.0f));
+
 	}
 	void Update() {
 		var time = attackTimer.GetElapsedTimeSecs ();
@@ -75,15 +80,18 @@ public class BarnAttack : MonoBehaviour
 	void OnTriggerEnter2D(Collider2D other)
 	{
 		if (other.gameObject.tag == "Attack") {
+			float facing = transform.parent.localScale.x < 0 ? -1.0f : 1.0f;
 			Debug.Log ("Attack hit");
+			other.gameObject.transform.parent.GetComponent<Rigidbody2D>().AddForce(facing*attackForce);
+			EndAttack();
+//			rbody.AddForce(other.gameObject.GetComponent<BarnAttack>().attackForce*(-facing));
 		}
 		Debug.Log ("hit" + other);
 		if (other.gameObject.tag == "Player" && other.gameObject != transform.parent) {
-			other.gameObject.GetComponent<BearController>().isAlive = false;
+			other.gameObject.GetComponent<BearController>().Die();
 			Debug.Log("Kill");
 
-			other.gameObject.GetComponent<BearController>().isAlive = true;
-			other.gameObject.transform.position = new Vector3(0,0,0);
+			other.gameObject.GetComponent<BearController>().Respawn(new Vector2(0,0) );
 		}
 	}
 }

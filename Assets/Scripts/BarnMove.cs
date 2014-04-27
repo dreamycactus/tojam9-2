@@ -10,13 +10,15 @@ public class BarnMove : MonoBehaviour {
 	[HideInInspector]
 	public bool jumpEnd;
 	private float jumpCutoff = 0.14f;
-	private float grabCutoff = 0.5f;
+	private float grabCutoff = 0.8f;
+	public float wallslidedrag = 5;
 	private bool onGround = true;
 	private bool onWall = false;
 	private Vector2 grabPosition;
 	private int maxJumps = 2;
 	private int numJumps;
 	private Timer grabTimer = new Timer();
+	private float wallpushamt = 100.0f;
 
 	private BearController controller;
 	private WallGrabCollider wallGrabCollider;
@@ -78,7 +80,7 @@ public class BarnMove : MonoBehaviour {
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed/2.0f || 
 			    Mathf.Sign (dir) != Mathf.Sign (rbody.velocity.x)) {
 				
-				rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
+				rbody.AddForce (new Vector2 ((float)dir * accel/2.0f, 0.0f));
 			}
 
 			if (dir < 0){
@@ -98,7 +100,7 @@ public class BarnMove : MonoBehaviour {
 
 
 			if (grabTimer.GetElapsedTimeSecs() > grabCutoff) {
-				rbody.drag = 15;
+				rbody.drag = wallslidedrag;
 				rbody.AddForce (new Vector2 (0.0f, -3.0f) );
 				controller.state = CharState.WallSlide;
 			}
@@ -127,12 +129,13 @@ public class BarnMove : MonoBehaviour {
 			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
 		} else if (controller.state == CharState.WallGrab || controller.state == CharState.WallSlide){
 			if (transform.localScale.x < 0){
-				rbody.AddForce (new Vector2 (70.0f, 1.0f*jumpaccel) );
+				Debug.Log("push left");
+				rbody.AddForce (new Vector2 (wallpushamt, 2.0f*jumpaccel) );
 			}else {
-				rbody.AddForce (new Vector2 (-70.0f, 1.0f*jumpaccel) );
+				Debug.Log ("push right");
+				rbody.AddForce (new Vector2 (-wallpushamt, 2.0f*jumpaccel) );
 			}
 
-			numJumps = 2;
 			jumpTimer.Start ();
 			controller.state = CharState.Jumping;
 			rbody.drag = 0;
@@ -161,11 +164,18 @@ public class BarnMove : MonoBehaviour {
 
 	}
 
+	public void Lunge(Vector2 vec) {
+		if ( transform.localScale.x < 0 ) {
+			vec.x *= -1.0f;
+		}
+		rbody.AddForce (vec);
+	}
+
 	public void AttachToWall(){
-		Debug.Log ("wallGrab");
 		grabTimer.Start();
 		rbody.drag = 1000000;
 		controller.state = CharState.WallGrab;
+		numJumps = maxJumps - 1;
 	}
 
 	// Update is called once per frame
@@ -213,18 +223,21 @@ public class BarnMove : MonoBehaviour {
 		var angle = Mathf.Rad2Deg * Mathf.Asin(normal.y);
 
 		// if normal points below -limAngle, collision is from above:
-		if (angle < 0){
-		} 
-		else // if angle > limAngle, collision is from below:
-		if (angle > 89 && angle < 91){
-			onGround = true;
-			rbody.drag = 0;
-			//Debug.Log ("onGroundl");
-			controller.state = CharState.Idle;
-		}
-		else // if angle > limAngle, collision is from below:
-		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player"){
-			onWall = true;
+		if (angle < 0) {
+				} else // if angle > limAngle, collision is from below:
+		if (angle > 3 && angle < 177) {
+						onGround = true;
+						rbody.drag = 0;
+						//Debug.Log ("onGroundl");
+						controller.state = CharState.Idle;
+				} else // if angle > limAngle, collision is from below:
+		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player") {
+				onWall = true;
+				if (transform.localScale.x < 0) {
+						FaceRight ();
+				} else {
+						FaceLeft ();
+				}
 		}
 		else { // otherwise collision is lateral:
 		}
