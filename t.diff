@@ -1,0 +1,63 @@
+diff --git a/Assets/PoP Animations/theprince_4.controller b/Assets/PoP Animations/theprince_4.controller
+index 7dc486b..fd6ae01 100644
+Binary files a/Assets/PoP Animations/theprince_4.controller and b/Assets/PoP Animations/theprince_4.controller differ
+diff --git a/Assets/Scripts/BarnMove.cs b/Assets/Scripts/BarnMove.cs
+index f65ce92..57fd4b3 100644
+--- a/Assets/Scripts/BarnMove.cs
++++ b/Assets/Scripts/BarnMove.cs
+@@ -2,7 +2,7 @@
+ using System.Collections;
+ 
+ public class BarnMove : MonoBehaviour {
+-	private float maxspeed = 2.0f;
++	private float maxspeed = 3.0f;
+ 	private float accel = 6.0f;
+ 	private float jumpaccel = 25.0f;
+ 	
+@@ -57,9 +57,9 @@ public class BarnMove : MonoBehaviour {
+ 
+ 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
+ 
+-				if (dir < 0){
++				if (rbody.velocity.x < 0){
+ 					FaceRight();
+-				}else if (dir > 0){
++				}else if (rbody.velocity.x > 0){
+ 					FaceLeft();
+ 				}
+ 
+@@ -171,6 +171,7 @@ public class BarnMove : MonoBehaviour {
+ 	// Update is called once per frame
+ 	void Update () {
+ 		HandleAnimation();
++
+ 	}
+ 
+ 	private void HandleAnimation(){
+@@ -220,7 +221,7 @@ public class BarnMove : MonoBehaviour {
+ 			onGround = true;
+ 			rbody.drag = 0;
+ 			//Debug.Log ("onGroundl");
+-			controller.state = CharState.Idle;
++			controller.state = CharState.Moving;
+ 		}
+ 		else // if angle > limAngle, collision is from below:
+ 		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player"){
+diff --git a/Assets/Scripts/Camera2.cs b/Assets/Scripts/Camera2.cs
+index 9ecfb1d..a172b21 100644
+--- a/Assets/Scripts/Camera2.cs
++++ b/Assets/Scripts/Camera2.cs
+@@ -40,7 +40,9 @@ public class Camera2 : MonoBehaviour
+ 			minx -= border; miny -= border;
+ 			maxx += border; maxy += border;
+ 			float zoom = Mathf.Max (maxx - minx, maxy - miny);
+-			Camera.main.orthographicSize = Mathf.Lerp (Camera.main.orthographicSize, zoom, Time.deltaTime * 1.0f);
++			Camera.main.transform.position = new Vector3 ((maxx + minx) / 2.0f, (maxy + miny) / 2.0f, -10.0f);
++			Debug.Log (Camera.main.transform.position);
++			Camera.main.orthographicSize = Mathf.Lerp (Camera.main.orthographicSize, zoom/1.5f, Time.deltaTime * 5.0f);
+ 			
+ 		}
+ }
+diff --git a/Assets/Test - Copy (2).unity b/Assets/Test - Copy (2).unity
+index 57ba8b1..79a7ad0 100644
+Binary files a/Assets/Test - Copy (2).unity and b/Assets/Test - Copy (2).unity differ
