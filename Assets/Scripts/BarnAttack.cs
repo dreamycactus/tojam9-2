@@ -81,6 +81,9 @@ public class BarnAttack : MonoBehaviour
 		if (other.gameObject.tag == "Player" && other.gameObject != transform.parent) {
 			other.gameObject.GetComponent<BearController>().isAlive = false;
 			Debug.Log("Kill");
+
+			other.gameObject.GetComponent<BearController>().isAlive = true;
+			other.gameObject.transform.position = new Vector3(0,0,0);
 		}
 	}
 }
