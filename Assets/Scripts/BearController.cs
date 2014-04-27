@@ -63,6 +63,7 @@ public class BearController : MonoBehaviour {
 			var iattackdown = Input.GetButtonDown (inputmap[(int)InputMap.ButX]);
 			if (iattackdown && !isAttacking && state != CharState.WallGrab && state != CharState.WallSlide) {
 				animator.Animate("Attack");
+				Debug.Log ("Ide3");
 				state = CharState.Idle;
 				barnAttack.Attack ();
 			}

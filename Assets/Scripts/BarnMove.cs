@@ -62,9 +62,9 @@ public class BarnMove : MonoBehaviour {
 
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 
-				if (dir < 0){
+				if (rbody.velocity.x < 0){
 					FaceRight();
-				}else if (dir > 0){
+				}else if (rbody.velocity.x > 0){
 					FaceLeft();
 				}
 
@@ -229,15 +229,15 @@ public class BarnMove : MonoBehaviour {
 						onGround = true;
 						rbody.drag = 0;
 						//Debug.Log ("onGroundl");
-						controller.state = CharState.Idle;
+						controller.state = CharState.Moving;
 				} else // if angle > limAngle, collision is from below:
 		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player") {
 				onWall = true;
 				grabbedWall = col.gameObject;
 				if (transform.localScale.x < 0) {
-						FaceRight ();
+						//FaceRight ();
 				} else {
-						FaceLeft ();
+						//FaceLeft ();
 				}
 		}
 		else { // otherwise collision is lateral:

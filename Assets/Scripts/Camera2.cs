@@ -36,7 +36,7 @@ public class Camera2 : MonoBehaviour
 					maxy = go.transform.position.y;
 				}
 			}
-
+		
 			minx -= 0; miny -= border;
 			maxx += 0; maxy += border;
 			float zoom = Mathf.Max (maxx - minx, maxy - miny) / 2.5f + 0.9f;
