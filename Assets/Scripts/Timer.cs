@@ -19,6 +19,10 @@ public class Timer
 		this.stopTime = DateTime.Now;
 		this.running = false;
 	}
+
+	public bool IsRunning() {
+		return running;
+	}
 		
 	// elaspsed time in milliseconds
 	public double GetElapsedTime() 

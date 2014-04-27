@@ -36,12 +36,13 @@ public class Camera2 : MonoBehaviour
 					maxy = go.transform.position.y;
 				}
 			}
-
-			minx -= border; miny -= border;
-			maxx += border; maxy += border;
-			float zoom = Mathf.Max (maxx - minx, maxy - miny);
-			Camera.main.transform.position = new Vector3 ((maxx + minx) / 2.0f, (maxy + miny) / 2.0f, -10.0f);
-			Camera.main.orthographicSize = Mathf.Lerp (Camera.main.orthographicSize, zoom/1.5f, Time.deltaTime * 5.0f);
+		
+			minx -= 0; miny -= border;
+			maxx += 0; maxy += border;
+			float zoom = Mathf.Max (maxx - minx, maxy - miny) / 2.5f + 0.9f;
+		Debug.Log (minx + "," + miny + "," + maxx + "," + maxy);
+		           Camera.main.transform.position = new Vector3 ((maxx + minx) / 2.0f, (maxy + miny) / 2.0f, -10.0f);
+			Camera.main.orthographicSize = Mathf.Lerp (Camera.main.orthographicSize, zoom, Time.deltaTime * 5.0f);
 			
 		}
 }

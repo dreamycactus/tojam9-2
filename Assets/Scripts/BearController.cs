@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
+public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide, Dying };
 public enum InputMap { Axis1X, Axis1Y, ButX, ButY, ButA, ButB };
 public class BearController : MonoBehaviour {
 
@@ -62,7 +62,6 @@ public class BearController : MonoBehaviour {
 
 			var iattackdown = Input.GetButtonDown (inputmap[(int)InputMap.ButX]);
 			if (iattackdown && !isAttacking && state != CharState.WallGrab && state != CharState.WallSlide) {
-				Debug.Log ("hi");
 				animator.Animate("Attack");
 				Debug.Log ("Ide3");
 				state = CharState.Idle;
@@ -72,6 +71,15 @@ public class BearController : MonoBehaviour {
 		}
 	}
 
+	public void Die() {
+		state = CharState.Dying;
+		isAlive = false;
+	}
+	public void Respawn(Vector2 v) {
+		state = CharState.Idle;
+		isAlive = true;
+		transform.position = new Vector3 (v.x,v.y, 0);
+	}
 	// Update is called once per frame
 	void Update()
 	{
