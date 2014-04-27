@@ -64,6 +64,7 @@ public class BearController : MonoBehaviour {
 			if (iattackdown && !isAttacking && state != CharState.WallGrab && state != CharState.WallSlide) {
 				Debug.Log ("hi");
 				animator.Animate("Attack");
+				Debug.Log ("Ide3");
 				state = CharState.Idle;
 				barnAttack.Attack ();
 			}

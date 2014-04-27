@@ -41,7 +41,6 @@ public class Camera2 : MonoBehaviour
 			maxx += border; maxy += border;
 			float zoom = Mathf.Max (maxx - minx, maxy - miny);
 			Camera.main.transform.position = new Vector3 ((maxx + minx) / 2.0f, (maxy + miny) / 2.0f, -10.0f);
-			Debug.Log (Camera.main.transform.position);
 			Camera.main.orthographicSize = Mathf.Lerp (Camera.main.orthographicSize, zoom/1.5f, Time.deltaTime * 5.0f);
 			
 		}
