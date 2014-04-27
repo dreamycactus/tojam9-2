@@ -8,10 +8,13 @@ public class BarnMove : MonoBehaviour {
 	
 	private Timer jumpTimer = new Timer();
 	private float jumpCutoff = 0.14f;
+	private float grabCutoff = 0.5f;
 	private bool onGround = true;
 	private bool onWall = false;
+	private Vector2 grabPosition;
 	private int maxJumps = 2;
 	private int numJumps;
+	private Timer grabTimer = new Timer();
 
 	private BearController controller;
 
@@ -74,9 +77,27 @@ public class BarnMove : MonoBehaviour {
 				rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 			}
 
-			if (onWall){
-				Debug.Log ("wallGrab");
+			if (dir < 0){
+				FaceRight();
+			}else if (dir > 0){
+				FaceLeft();
 			}
+			
+			if (onWall){
+				AttachToWall();
+			}
+			break;
+		case CharState.WallGrab:
+			//rbody.
+			//rbody.velocity = new Vector2(0,0.2f);
+
+			rbody.drag = 1000000;
+
+			if (grabTimer.GetElapsedTimeSecs() > grabCutoff) {
+				rbody.drag = 0;
+				controller.state = CharState.Idle;
+			}
+
 			break;
 		default:
 			break;
@@ -85,11 +106,24 @@ public class BarnMove : MonoBehaviour {
 
 	public void JumpStart() {
 		if (controller.state == CharState.Idle || controller.state == CharState.Moving) {
+			onGround = false;
 			numJumps = 1;
 			jumpTimer.Start ();
 			controller.state = CharState.Jumping;
 			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
-		} else if (controller.state == CharState.Jumping && numJumps++ < maxJumps) {
+		} else if (controller.state == CharState.WallGrab){
+			numJumps = 1;
+			jumpTimer.Start ();
+			controller.state = CharState.Jumping;
+			rbody.drag = 0;
+			if (transform.localScale.x < 0){
+				rbody.AddForce (new Vector2 (70.0f, 1.0f*jumpaccel) );
+			}else {
+				rbody.AddForce (new Vector2 (-70.0f, 1.0f*jumpaccel) );
+			}
+			onWall = false;
+		}
+		else if (controller.state == CharState.Jumping && numJumps++ < maxJumps) {
 			jumpTimer.Start ();
 			animator.DoubleJump();
 			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
@@ -111,7 +145,9 @@ public class BarnMove : MonoBehaviour {
 	}
 
 	public void AttachToWall(){
-
+		Debug.Log ("wallGrab");
+		grabTimer.Start();
+		controller.state = CharState.WallGrab;
 	}
 
 	// Update is called once per frame
@@ -168,11 +204,20 @@ public class BarnMove : MonoBehaviour {
 		if ((angle > -1 && angle < 1) || (angle > 179 && angle < 181)){
 			onWall = true;
 			//Debug.Log ("onWall");
-			controller.state = CharState.Idle;
-			AttachToWall();
+			//controller.state = CharState.Idle;
+			//AttachToWall();
 		}
 		else { // otherwise collision is lateral:
 		}
 
+	}
+
+	void OnCollisionExit2D(Collision2D col)
+	{
+		
+		if (onWall){
+			onWall = false;
+		}
+		
 	}
 }
