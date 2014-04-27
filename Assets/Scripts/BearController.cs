@@ -19,6 +19,8 @@ public class BearController : MonoBehaviour {
 	private BarnAttack barnAttack;
 	private BarnAnimation animator;
 
+	public AudioClip sfxdeath;
+
 	public string[] inputmap;
 
 	[HideInInspector]
@@ -70,6 +72,10 @@ public class BearController : MonoBehaviour {
 
 			var ibdown = Input.GetButtonDown(inputmap[(int)InputMap.ButB]);
 			if (ibdown) {
+<<<<<<< HEAD
+				animator.Animate("Tele");
+=======
+>>>>>>> cb732f6dbab09c20ec40192b929750754bce9207
 				GetComponent<BarnTele>().Teleport(new Vector2(idx, -idy));
 			}
 
@@ -82,6 +88,7 @@ public class BearController : MonoBehaviour {
 	}
 
 	public void Die() {
+		audio.PlayOneShot(sfxdeath);
 		state = CharState.Dying;
 		isAlive = false;
 	}
