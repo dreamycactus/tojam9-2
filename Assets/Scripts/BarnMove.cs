@@ -10,7 +10,7 @@ public class BarnMove : MonoBehaviour {
 	[HideInInspector]
 	public bool jumpEnd;
 	private float jumpCutoff = 0.14f;
-	private float grabCutoff = 2.8f;
+	private float grabCutoff = 0.7f;
 	public float wallslidedrag = 5;
 	private bool onGround = true;
 	private bool onWall = false;
@@ -18,7 +18,7 @@ public class BarnMove : MonoBehaviour {
 	private int maxJumps = 2;
 	private int numJumps;
 	private Timer grabTimer = new Timer();
-	private float wallpushamt = 50.0f;
+	private float wallpushamt = 70.0f;
 
 	private BearController controller;
 	private WallGrabCollider wallGrabCollider;
