@@ -105,6 +105,10 @@ public class BarnMove : MonoBehaviour {
 		case CharState.WallSlide:
 			//rbody.
 			//rbody.velocity = new Vector2(0,0.2f);
+			if (!onWall){
+				rbody.drag = 0;
+				controller.state = CharState.Idle;
+			}
 
 			break;
 		default:
@@ -213,7 +217,7 @@ public class BarnMove : MonoBehaviour {
 			controller.state = CharState.Idle;
 		}
 		else // if angle > limAngle, collision is from below:
-		if ((angle > 179 && angle < 181) || (angle > -1 && angle < 1)){
+		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player"){
 			onWall = true;
 		}
 		else { // otherwise collision is lateral:
@@ -224,7 +228,7 @@ public class BarnMove : MonoBehaviour {
 	void OnCollisionExit2D(Collision2D col)
 	{
 		
-		if (onWall){
+		if (onWall && col.transform.tag != "Player"){
 			onWall = false;
 		}
 		

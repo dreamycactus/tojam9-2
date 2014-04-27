@@ -7,7 +7,8 @@ public class BarnAnimation : MonoBehaviour {
 	enum CharacterState {
 		Idle = 0,
 		Walk = 1,
-		Jump = 2
+		Jump = 2,
+		Attack = 3
 	}
 
 	private CharacterState characterState = CharacterState.Idle;

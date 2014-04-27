@@ -17,6 +17,7 @@ public class BearController : MonoBehaviour {
 
 	private BarnMove barnMove;
 	private BarnAttack barnAttack;
+	private BarnAnimation animator;
 
 	public string[] inputmap;
 
@@ -29,6 +30,8 @@ public class BearController : MonoBehaviour {
 		state = CharState.Idle;
 		barnAttack = GetComponentInChildren<BarnAttack> ();
 		gameObject.tag = "Player";
+
+		animator = GetComponent<BarnAnimation>();
 	}
 
 	void HandleInput()
@@ -60,8 +63,11 @@ public class BearController : MonoBehaviour {
 			var iattackdown = Input.GetButtonDown (inputmap[(int)InputMap.ButX]);
 			if (iattackdown && !isAttacking) {
 				Debug.Log ("hi");
+				animator.Animate("Attack");
+				state = CharState.Idle;
 				barnAttack.Attack ();
 			}
+
 		}
 	}
 
