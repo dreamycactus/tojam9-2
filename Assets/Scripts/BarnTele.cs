@@ -38,6 +38,6 @@ public class BarnTele : MonoBehaviour
 		}
 		inputvec = vec;
 		inputvec.y *= 1.5f;
-		GetComponent<SpriteRenderer> ().color = new Color (256, 256, 256, 0);
+		//GetComponent<SpriteRenderer> ().color = new Color (256, 256, 256, 0);
 	}
 }

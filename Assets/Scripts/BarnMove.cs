@@ -28,7 +28,6 @@ public class BarnMove : MonoBehaviour {
 	public AudioClip sfxrun;
 	public AudioClip sfxhit;
 	public AudioClip sfxgrab;
-	public AudioClip sfxdeath;
 	public AudioClip sfxtele;
 
 
@@ -50,7 +49,7 @@ public class BarnMove : MonoBehaviour {
 		switch (controller.state) {
 		case CharState.Idle:
 			//controller.state = CharState.Moving;
-			audio.PlayOneShot(sfxrun);
+			//audio.PlayOneShot(sfxrun);
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed) {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
 					if (dir < 0){
@@ -110,11 +109,13 @@ public class BarnMove : MonoBehaviour {
 				rbody.AddForce (new Vector2 (0.0f, -3.0f) );
 				controller.state = CharState.WallSlide;
 			}
-			if (dir > 0){
+
+			if (dir < 0){
 				FaceRight();
-			}else if (dir < 0){
+			}else if (dir > 0){
 				FaceLeft();
 			}
+
 			break;
 		case CharState.WallSlide:
 			//rbody.
