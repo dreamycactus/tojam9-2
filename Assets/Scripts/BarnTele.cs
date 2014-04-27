@@ -5,8 +5,8 @@ public enum TeleState { Tele, None }
 public class BarnTele : MonoBehaviour 
 {
 	Rigidbody2D rbody;
-	public float teleTime = 1.0f;
-	public float teleamt = 0.1f;
+	public float teleTime = 0.15f;
+	public float teleamt = 20.0f;
 	Timer timer = new Timer();
 	Vector2 inputvec;
 	[HideInInspector]
@@ -32,8 +32,9 @@ public class BarnTele : MonoBehaviour
 
 	public void Teleport(Vector2 vec) {
 		if (state == TeleState.None) {
-				timer.Start ();
-				state = TeleState.Tele;
+			timer.Start ();
+			state = TeleState.Tele;
+			GetComponent<BarnMove>().audio.PlayOneShot(GetComponent<BarnMove>().sfxtele);
 		}
 		inputvec = vec;
 		inputvec.y *= 1.5f;

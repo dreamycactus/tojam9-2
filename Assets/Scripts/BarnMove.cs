@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
 public class BarnMove : MonoBehaviour {
@@ -25,6 +25,12 @@ public class BarnMove : MonoBehaviour {
 	[HideInInspector]
 	public GameObject grabbedWall;
 
+	public AudioClip sfxrun;
+	public AudioClip sfxhit;
+	public AudioClip sfxgrab;
+	public AudioClip sfxdeath;
+	public AudioClip sfxtele;
+
 
 	Rigidbody2D rbody;
 
@@ -44,9 +50,9 @@ public class BarnMove : MonoBehaviour {
 		switch (controller.state) {
 		case CharState.Idle:
 			//controller.state = CharState.Moving;
+			audio.PlayOneShot(sfxrun);
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed) {
 					rbody.AddForce (new Vector2 ((float)dir * accel, 0.0f));
-
 					if (dir < 0){
 						controller.state = CharState.Moving;
 						FaceRight();
@@ -57,6 +63,7 @@ public class BarnMove : MonoBehaviour {
 			}
 			break;
 		case CharState.Moving:
+			audio.PlayOneShot(sfxrun);
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed || 
 					Mathf.Sign (dir) != Mathf.Sign (rbody.velocity.x)) {
 
@@ -82,7 +89,6 @@ public class BarnMove : MonoBehaviour {
 		case CharState.Jumping:
 			if (Mathf.Abs (rbody.velocity.x) < maxspeed/2.0f || 
 			    Mathf.Sign (dir) != Mathf.Sign (rbody.velocity.x)) {
-				
 				rbody.AddForce (new Vector2 ((float)dir * accel/2.0f, 0.0f));
 			}
 
@@ -99,15 +105,16 @@ public class BarnMove : MonoBehaviour {
 		case CharState.WallGrab:
 			//rbody.
 			//rbody.velocity = new Vector2(0,0.2f);
-
-
-
 			if (grabTimer.GetElapsedTimeSecs() > grabCutoff) {
 				rbody.drag = wallslidedrag;
 				rbody.AddForce (new Vector2 (0.0f, -3.0f) );
 				controller.state = CharState.WallSlide;
 			}
-
+			if (dir > 0){
+				FaceRight();
+			}else if (dir < 0){
+				FaceLeft();
+			}
 			break;
 		case CharState.WallSlide:
 			//rbody.
@@ -130,7 +137,7 @@ public class BarnMove : MonoBehaviour {
 			controller.state = CharState.Jumping;
 			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
 		} else if (controller.state == CharState.WallGrab || controller.state == CharState.WallSlide){
-			if (transform.localScale.x < 0){
+			if (transform.localScale.x > 0){
 				rbody.AddForce (new Vector2 (wallpushamt, 2.0f*jumpaccel) );
 			}else {
 				rbody.AddForce (new Vector2 (-wallpushamt, 2.0f*jumpaccel) );
@@ -204,13 +211,13 @@ public class BarnMove : MonoBehaviour {
 	}
 
 	private void FaceLeft(){
-		if (transform.localScale.x < 0) {
+		if (transform.localScale.x > 0) {
 			transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
 		}
 	}
 	
 	private void FaceRight(){
-		if (transform.localScale.x > 0) {
+		if (transform.localScale.x < 0) {
 			transform.localScale = new Vector3(-transform.localScale.x,transform.localScale.y,transform.localScale.z);
 		}
 	}
@@ -234,10 +241,11 @@ public class BarnMove : MonoBehaviour {
 		if (((angle > 179 && angle < 181) || (angle > -1 && angle < 1)) && col.transform.tag != "Player") {
 				onWall = true;
 				grabbedWall = col.gameObject;
-				if (transform.localScale.x < 0) {
-						//FaceRight ();
+				audio.PlayOneShot(sfxgrab);
+				if (transform.localScale.x > 0) {
+						FaceRight ();
 				} else {
-						//FaceLeft ();
+						FaceLeft ();
 				}
 		}
 		else { // otherwise collision is lateral:

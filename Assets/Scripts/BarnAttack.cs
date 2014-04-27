@@ -43,6 +43,7 @@ public class BarnAttack : MonoBehaviour
 		controller.isAttacking = true;
 		var parent = transform.parent.gameObject;
 		parent.GetComponent<BarnMove> ().Lunge (new Vector2 (50.0f, 0.0f));
+		parent.GetComponent<BarnMove> ().audio.PlayOneShot (parent.GetComponent<BarnMove> ().sfxhit);
 
 	}
 	void Update() {
