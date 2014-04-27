@@ -68,10 +68,10 @@ public class BearController : MonoBehaviour {
 				barnAttack.Attack ();
 			}
 
-//			var ibdown = Input.GetButtonDown(inputmap[(int)InputMap.ButB]);
-//			if (ibdown) {
-//				GetComponent<BarnTele>().Teleport(new Vector2(idx, -idy));
-//			}
+			var ibdown = Input.GetButtonDown(inputmap[(int)InputMap.ButB]);
+			if (ibdown) {
+				GetComponent<BarnTele>().Teleport(new Vector2(idx, -idy));
+			}
 
 			if (idy > 0) {
 				Debug.Log ("let go");
