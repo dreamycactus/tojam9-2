@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide, Dying };
-public enum InputMap { Axis1X, Axis1Y, ButX, ButY, ButA, ButB };
+public enum InputMap { Axis1X, Axis1Y, ButX, ButY,ButB, ButA };
 public class BearController : MonoBehaviour {
 
 //	public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
@@ -66,6 +66,16 @@ public class BearController : MonoBehaviour {
 				Debug.Log ("Ide3");
 				state = CharState.Idle;
 				barnAttack.Attack ();
+			}
+
+			var ibdown = Input.GetButtonDown(inputmap[(int)InputMap.ButB]);
+			if (ibdown) {
+				GetComponent<BarnTele>().Teleport(new Vector2(idx, -idy));
+			}
+
+			if (idy > 0) {
+				Debug.Log ("let go");
+				barnMove.LetGoWall();
 			}
 
 		}

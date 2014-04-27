@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-
 public class EnvPillar : MonoBehaviour {
 	enum PillarState { Rising, Falling, WaitingDown, WaitingUp };
 	private Vector2 origPos;
@@ -25,8 +24,6 @@ public class EnvPillar : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		Debug.Log (timer.GetElapsedTimeSecs ());
-		Debug.Log (state);
 		transform.position = new Vector3 (origPos.x, transform.position.y, 0.0f);
 		switch(state) {
 		case PillarState.Rising:
@@ -74,7 +71,7 @@ public class EnvPillar : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D other)
 	{
-		if (other.gameObject.tag == "Player") {
+		if (other.gameObject.tag == "Player" && state == PillarState.Falling) {
 			var normal = other.contacts [0].normal;
 			// get its elevation angle in degrees:
 			var angle = Mathf.Rad2Deg * Mathf.Asin (normal.y);
@@ -82,7 +79,7 @@ public class EnvPillar : MonoBehaviour {
 					other.gameObject.GetComponent<BearController> ().Die ();
 					other.gameObject.GetComponent<BearController> ().Respawn (new Vector2(0,0));
 			}
-		} else if (other.gameObject.tag == "Platform" && state == PillarState.Falling) {
+		} else if (other.gameObject.tag == "Platform" ) {
 			state = PillarState.WaitingDown;
 			timer.Stop ();
 			timer.Start ();
