@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
+public enum InputMap { Axis1X, Axis1Y, ButX, ButY, ButA, ButB };
 public class BearController : MonoBehaviour {
 
 //	public enum CharState { Idle, Moving, Jumping, Falling, WallGrab, WallSlide };
@@ -16,32 +17,42 @@ public class BearController : MonoBehaviour {
 
 	private BarnMove barnMove;
 	private BarnAttack barnAttack;
+
+	public string[] inputmap;
+
+	[HideInInspector]
+	public bool isAlive = true;
 	// Use this for initialization
 	void Start()
 	{
 		barnMove = GetComponent<BarnMove> ();
 		state = CharState.Idle;
 		barnAttack = GetComponentInChildren<BarnAttack> ();
+		gameObject.tag = "player";
 	}
 
 	void HandleInput()
 	{
 		if (!isAttacking) {
 			Input.GetJoystickNames ();
-			var idx = Input.GetAxis ("Hor1");
-			var idy = Input.GetAxis ("Ver1");
+			var idx = Input.GetAxis (inputmap[(int)InputMap.Axis1X]);
+			var idy = Input.GetAxis (inputmap[(int)InputMap.Axis1Y]);
 
 			barnMove.Move (AxisRound (idx));
-			var ijmpdown = Input.GetButtonDown ("Jump1");
-			var ijmpstate = Input.GetButton ("Jump1");
+			var ijmpdown = Input.GetButtonDown (inputmap[(int)InputMap.ButY]);
+			var ijmpup = Input.GetButtonUp(inputmap[(int)InputMap.ButY]);
+			var ijmpstate = Input.GetButton (inputmap[(int)InputMap.ButY]);
 
+//			if (ijmpup && !barnMove.jumpEnd) {
+//				barnMove.jumpEnd = true;
+//			}
 			if (ijmpdown) {
 					barnMove.JumpStart ();
 			} else if (ijmpstate) {
 					barnMove.Jump ();
 			}
 
-			var iattackdown = Input.GetButtonDown ("joy1x");
+			var iattackdown = Input.GetButtonDown (inputmap[(int)InputMap.ButX]);
 			if (iattackdown) {
 					Debug.Log ("hi");
 					barnAttack.Attack ();
@@ -52,7 +63,9 @@ public class BearController : MonoBehaviour {
 	// Update is called once per frame
 	void Update()
 	{
-		HandleInput();
+		if (isAlive) {
+			HandleInput ();
+		}
 	}
 
 	int AxisRound(float val) 

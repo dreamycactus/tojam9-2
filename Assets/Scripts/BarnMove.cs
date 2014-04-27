@@ -7,6 +7,8 @@ public class BarnMove : MonoBehaviour {
 	private float jumpaccel = 25.0f;
 	
 	private Timer jumpTimer = new Timer();
+	[HideInInspector]
+	public bool jumpEnd;
 	private float jumpCutoff = 0.14f;
 	private bool onGround = true;
 	private bool onWall = false;
@@ -75,7 +77,7 @@ public class BarnMove : MonoBehaviour {
 			}
 
 			if (onWall){
-				Debug.Log ("wallGrab");
+//				Debug.Log ("wallGrab");
 			}
 			break;
 		default:
@@ -93,9 +95,9 @@ public class BarnMove : MonoBehaviour {
 			jumpTimer.Start ();
 			animator.DoubleJump();
 			if (jumpTimer.GetElapsedTimeSecs() < jumpCutoff) {
-				if ( rbody.velocity.y < 0 ) {
+//				if ( rbody.velocity.y < 0 ) {
 					rbody.velocity = new Vector2(rbody.velocity.x, 0.0f);
-				}
+//				}
 				rbody.AddForce (new Vector2 (0.0f, 2.0f*jumpaccel) );
 			}
 		}
@@ -161,7 +163,7 @@ public class BarnMove : MonoBehaviour {
 		else // if angle > limAngle, collision is from below:
 		if (angle > 89 && angle < 91){
 			onGround = true;
-			//Debug.Log ("onGround");
+			//Debug.Log ("onGroundl");
 			controller.state = CharState.Idle;
 		}
 		else // if angle > limAngle, collision is from below:
