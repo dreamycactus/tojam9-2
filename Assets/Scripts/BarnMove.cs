@@ -67,9 +67,9 @@ public class BarnMove : MonoBehaviour {
 					animator.SetIsRunning(false);
 				}
 
-					if (dir == 0){
-						controller.state = CharState.Idle;
-					}
+				if (dir == 0){
+					controller.state = CharState.Idle;
+				}
 			}
 			break;
 		case CharState.Jumping:
@@ -93,12 +93,18 @@ public class BarnMove : MonoBehaviour {
 			//rbody.
 			//rbody.velocity = new Vector2(0,0.2f);
 
-			rbody.drag = 1000000;
+
 
 			if (grabTimer.GetElapsedTimeSecs() > grabCutoff) {
-				rbody.drag = 0;
-				controller.state = CharState.Idle;
+				rbody.drag = 15;
+				rbody.AddForce (new Vector2 (0.0f, -3.0f) );
+				controller.state = CharState.WallSlide;
 			}
+
+			break;
+		case CharState.WallSlide:
+			//rbody.
+			//rbody.velocity = new Vector2(0,0.2f);
 
 			break;
 		default:
@@ -113,16 +119,18 @@ public class BarnMove : MonoBehaviour {
 			jumpTimer.Start ();
 			controller.state = CharState.Jumping;
 			rbody.AddForce (new Vector2 (0.0f, 2.4f*jumpaccel) );
-		} else if (controller.state == CharState.WallGrab){
-			numJumps = 1;
-			jumpTimer.Start ();
-			controller.state = CharState.Jumping;
-			rbody.drag = 0;
+		} else if (controller.state == CharState.WallGrab || controller.state == CharState.WallSlide){
 			if (transform.localScale.x < 0){
 				rbody.AddForce (new Vector2 (70.0f, 1.0f*jumpaccel) );
 			}else {
 				rbody.AddForce (new Vector2 (-70.0f, 1.0f*jumpaccel) );
 			}
+
+			numJumps = 2;
+			jumpTimer.Start ();
+			controller.state = CharState.Jumping;
+			rbody.drag = 0;
+
 			onWall = false;
 		}
 		else if (controller.state == CharState.Jumping && numJumps++ < maxJumps) {
@@ -149,6 +157,7 @@ public class BarnMove : MonoBehaviour {
 	public void AttachToWall(){
 		Debug.Log ("wallGrab");
 		grabTimer.Start();
+		rbody.drag = 1000000;
 		controller.state = CharState.WallGrab;
 	}
 
@@ -199,15 +208,13 @@ public class BarnMove : MonoBehaviour {
 		else // if angle > limAngle, collision is from below:
 		if (angle > 89 && angle < 91){
 			onGround = true;
+			rbody.drag = 0;
 			//Debug.Log ("onGroundl");
 			controller.state = CharState.Idle;
 		}
 		else // if angle > limAngle, collision is from below:
-		if ((angle > -1 && angle < 1) || (angle > 179 && angle < 181)){
+		if ((angle > 179 && angle < 181) || (angle > -1 && angle < 1)){
 			onWall = true;
-			//Debug.Log ("onWall");
-			//controller.state = CharState.Idle;
-			//AttachToWall();
 		}
 		else { // otherwise collision is lateral:
 		}
