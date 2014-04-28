@@ -24,7 +24,7 @@ public class BarnTele : MonoBehaviour
 			if (timer.GetElapsedTimeSecs () < teleTime) {
 				rbody.AddForce (inputvec*teleamt);					
 			} else if (timer.GetElapsedTimeSecs () > teleTime * 3.0 ){
-				GetComponent<SpriteRenderer> ().color = new Color (256, 256, 256, 256);
+				//GetComponent<SpriteRenderer> ().color = new Color (256, 256, 256, 256);
 				state = TeleState.None;
 			}
 		}

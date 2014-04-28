@@ -72,13 +72,7 @@ public class BearController : MonoBehaviour {
 
 			var ibdown = Input.GetButtonDown(inputmap[(int)InputMap.ButB]);
 			if (ibdown) {
-<<<<<<< HEAD
-
 				animator.Animate("Tele");
-=======
-				animator.Animate("Tele");
-
->>>>>>> 841ceea90e2d0994f360a62880a679de44f28d55
 				GetComponent<BarnTele>().Teleport(new Vector2(idx, -idy));
 			}
 
@@ -99,6 +93,7 @@ public class BearController : MonoBehaviour {
 		state = CharState.Idle;
 		isAlive = true;
 		transform.position = new Vector3 (v.x,v.y, 0);
+		rigidbody2D.drag = 0.0f;
 	}
 	// Update is called once per frame
 	void Update()
